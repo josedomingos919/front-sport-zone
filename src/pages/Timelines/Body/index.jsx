@@ -15,6 +15,7 @@ const initialMovements = [
 const FinanceTable = () => {
   const [movements, setMovements] = useState(initialMovements);
   const [showModal, setShowModal] = useState(false);
+  const [showExport, setShowExport] = useState(false);
   const [newMovement, setNewMovement] = useState({
     descricao: "",
     valor: "",
@@ -43,7 +44,7 @@ const FinanceTable = () => {
         </button>
         <button
           className="flex items-center bg-blue-600 hover:bg-primary/90 text-white px-4 py-2 rounded shadow"
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowExport(true)}
         >
           <PiExportBold className="mr-2" /> Relatório
         </button>
@@ -86,7 +87,9 @@ const FinanceTable = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Adicionar Movimento</h2>
+            <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
+              <FaPlus className="mr-2" /> Adicionar Movimento
+            </h2>
             <div className="flex flex-col gap-3">
               <input
                 type="text"
@@ -135,9 +138,9 @@ const FinanceTable = () => {
         </div>
       )}
       <ExportReportModal
-        show={showModal}
+        show={showExport}
         onExport={() => {}}
-        onClose={() => setShowModal(false)}
+        onClose={() => setShowExport(false)}
       />
       <Pagination currentPage={6} totalPages={33} onPageChange={() => {}} />
     </div>
