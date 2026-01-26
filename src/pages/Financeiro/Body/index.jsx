@@ -80,9 +80,7 @@ const FinanceTable = () => {
                   {isLoadingMoviments ? <ActivityIndicator /> : "Sem dados"}
                 </td>
               </tr>
-            ) : (
-              <></>
-            )}
+            ) : null}
             {movements.map((m, idx) => (
               <tr key={idx} className="border-b hover:bg-gray-50">
                 <td className="py-2 px-4">{idx + 1}</td>
