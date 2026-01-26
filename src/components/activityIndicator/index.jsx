@@ -1,12 +1,10 @@
 import React from "react";
+import { OrbitProgress } from "react-loading-indicators";
 
-const ActivityIndicator = ({ size = 8, color = "blue-500", message }) => {
+const ActivityIndicator = ({ size = "medium", color = "#ffff" }) => {
   return (
-    <div className="flex flex-col items-center justify-center space-y-2 p-4">
-      <div
-        className={`border-4 border-t-${color} border-gray-200 rounded-full w-${size} h-${size} animate-spin`}
-      ></div>
-      {message && <span className="text-gray-700 font-medium">{message}</span>}
+    <div className="smal-indicator">
+      <OrbitProgress color={color} size={size} />
     </div>
   );
 };

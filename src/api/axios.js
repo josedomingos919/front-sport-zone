@@ -1,3 +1,4 @@
+import { service } from "@/services";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
@@ -10,9 +11,9 @@ export const axiosInstance = axios.create({
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   function (config) {
-    config.headers["Authorization"] = `Bearer ${localStorage.getItem(
-      "access_token"
-    )}`;
+    config.headers["Authorization"] = `Bearer ${
+      service.cache.getItem("login").token
+    }`;
     // Do something before request is sent
     return config;
   },
