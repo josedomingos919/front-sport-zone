@@ -1,25 +1,18 @@
 import ActivityIndicator from "@/components/activityIndicator";
 import Pagination from "@/components/pagination";
-import React, { useEffect, useState } from "react";
-import { FaPlus, FaArrowUp, FaArrowDown } from "react-icons/fa";
-import { PiExportBold } from "react-icons/pi";
-import ExportReportModal from "../ExportReport";
-import { service } from "@/services";
-import {
-  DefaultPageSize,
-  MovimentType,
-  UserAccessType,
-} from "@/utils/helper/consts";
-import { HttpStatus } from "@/utils/helper";
 import AddModal from "../AddModal/AddModal";
-import { formatNumberPT } from "@/utils/helper/functions";
-import EditMovimentModalEditar from "../EditMovimentModalEditar/AddMovimentModal";
+import EditMovimentModalEditar from "../EditModal/AddMovimentModal";
 
-const FinanceTable = () => {
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { service } from "@/services";
+import { DefaultPageSize, UserAccessType } from "@/utils/helper/consts";
+import { HttpStatus } from "@/utils/helper";
+
+const ClubeTable = () => {
   const [movements, setMovements] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showExport, setShowExport] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoadingMoviments, setIsLoadingMoviments] = useState(false);
@@ -117,4 +110,4 @@ const FinanceTable = () => {
   );
 };
 
-export default FinanceTable;
+export default ClubeTable;

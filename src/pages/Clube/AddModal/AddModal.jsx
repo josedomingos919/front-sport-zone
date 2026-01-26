@@ -75,7 +75,7 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
-              <FaPlus className="mr-2" /> Utilizadores
+              <FaPlus className="mr-2" /> Clube
             </h2>
             <div className="flex flex-col gap-3">
               <div className="field flex flex-col">
