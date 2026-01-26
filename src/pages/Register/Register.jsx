@@ -9,6 +9,7 @@ import { service } from "@/services";
 import { HttpStatus } from "@/utils/helper";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash, FaFutbol } from "react-icons/fa";
+import { OrbitProgress } from "react-loading-indicators";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,16 +19,20 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
+    reset,
   } = useForm();
 
   const onRegister = async (payload) => {
     setIsLoading(true);
+    clearErrors();
 
     const response = await service.auth.signup(payload);
 
     console.log({ payload, response });
 
     if (response.status == HttpStatus.CREATED) {
+      reset();
       toast.success("Conta criada com sucesso! Por favor, faça login.");
     } else {
       toast.error("Erro ao criar conta. Tente novamente.");
@@ -108,8 +113,19 @@ const Register = () => {
               )}
             </div>
             <div className="mb-4">
-              <Button type="submit" variant="default" className="w-full">
-                Cadastrar-se
+              <Button
+                disabled={isLoading}
+                type="submit"
+                variant="default"
+                className="w-full"
+              >
+                {isLoading ? (
+                  <div className="smal-indicator">
+                    <OrbitProgress color="#ffff" size="medium" />
+                  </div>
+                ) : (
+                  "Cadastrar-se"
+                )}
               </Button>
             </div>
           </form>
