@@ -8,8 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SidebarMobile from "../Sidebar/SidebarMobile";
+import { useAppState } from "@/store/appState";
+import { getIniciais } from "@/utils/helper/functions";
 
 const Navbar = () => {
+  const user = useAppState((state) => state.user);
+
+  console.log("User Navbar:", user);
+
   return (
     <nav className="bg-white p-4 shadow">
       <div className="max-w-7xl mx-auto px-4">
@@ -21,14 +27,14 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger className="flex flex-row gap-3 outline-none">
               <h5 className="my-auto">
-                Olá, <strong>Tony Silva</strong>
+                Olá, <strong>{user?.name}</strong>
               </h5>
               <Avatar className="my-auto">
                 <AvatarImage
                 //src="https://github.com/shadcn.png"
                 //alt="@shadcn"
                 />
-                <AvatarFallback>TS</AvatarFallback>
+                <AvatarFallback>{getIniciais(user?.name)}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

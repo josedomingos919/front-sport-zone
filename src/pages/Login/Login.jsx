@@ -7,18 +7,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { service } from "@/services";
+import { HttpStatus } from "@/utils/helper";
+import { OrbitProgress } from "react-loading-indicators";
+import { useAppState } from "@/store/appState";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const setUser = useAppState((state) => state.setUser);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
+    reset,
   } = useForm();
 
-  const onLogin = (payload) => {
-    console.log(payload);
+  const onLogin = async (payload) => {
+    setIsLoading(true);
+    clearErrors();
+
+    const response = await service.auth.login(payload);
+
+    console.log({ payload, response });
+
+    if (response.status == HttpStatus.OK) {
+      reset();
+      service.cache.setItem("login", response.data);
+      setUser(response?.data?.user);
+      navigate("/dashboard");
+    } else {
+      toast.error("Erro ao fazer login, Tente novamente.");
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -89,14 +116,18 @@ const Login = () => {
             </div>
             <div className="mb-4">
               <Button
-                onClick={() => {
-                  toast.error("Funcionalidade não implementada ainda!");
-                }}
+                disabled={isLoading}
                 type="submit"
                 variant="default"
                 className="w-full"
               >
-                Entrar
+                {isLoading ? (
+                  <div className="smal-indicator">
+                    <OrbitProgress color="#ffff" size="medium" />
+                  </div>
+                ) : (
+                  "Entrar"
+                )}
               </Button>
             </div>
           </form>

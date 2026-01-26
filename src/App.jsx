@@ -5,16 +5,19 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 import Login from "@/pages/Login/Login";
+import Minutes from "@/pages/Equipa/Minutes";
+import { useAppState } from "./store/appState";
+import Register from "@/pages/Register/Register";
 import NotFound from "@/pages/NotFound/NotFound";
 import Dashboard from "@/pages/Dashboard/Dashboard";
 import Timelines from "@/pages/Financeiro/Timelines";
-import Minutes from "@/pages/Equipa/Minutes";
-import Register from "@/pages/Register/Register";
 import ForgotPassword from "@/pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword/ResetPassword";
-import { useAppState } from "./store/appState";
+import { useInitApp } from "./hooks/useInitApp/useInitApp";
 
 const App = () => {
+  useInitApp();
+
   const user = useAppState((state) => state.user);
 
   return (

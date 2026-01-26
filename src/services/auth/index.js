@@ -1,9 +1,9 @@
 import { axiosInstance } from "../../api/axios";
 
-async function login({ phone = "", password = "" }) {
+async function login({ email = "", password = "" }) {
   try {
     const response = await axiosInstance.post("auth/signin", {
-      phone,
+      email,
       password,
     });
 
