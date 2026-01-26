@@ -1,7 +1,13 @@
 import ActivityIndicator from "@/components/activityIndicator";
 import Pagination from "@/components/pagination";
 import React, { useEffect, useState } from "react";
-import { FaPlus, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import {
+  FaPlus,
+  FaArrowUp,
+  FaArrowDown,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 import { PiExportBold } from "react-icons/pi";
 import ExportReportModal from "../ExportReport";
 import { service } from "@/services";
@@ -71,6 +77,7 @@ const FinanceTable = () => {
               <th className="py-2 px-4 text-left">Nome</th>
               <th className="py-2 px-4 text-left">Email</th>
               <th className="py-2 px-4 text-center">Acesso</th>
+              <th className="py-2 px-4 text-center">Opções</th>
             </tr>
           </thead>
           <tbody>
@@ -88,6 +95,28 @@ const FinanceTable = () => {
                 <td className="py-2 px-4">{m?.email}</td>
                 <td className="py-2 px-4 text-center capitalize">
                   {UserAccessType[m?.access]}
+                </td>
+                {/* OPÇÕES */}
+                <td className="py-2 px-4">
+                  <div className="flex justify-center gap-3">
+                    {/* Editar */}
+                    <button
+                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                      title="Editar"
+                      onClick={() => handleEdit(club)}
+                    >
+                      <FaEdit size={14} />
+                    </button>
+
+                    {/* Eliminar */}
+                    <button
+                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      title="Eliminar"
+                      onClick={() => handleDelete(club?.id)}
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

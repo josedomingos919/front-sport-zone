@@ -2,6 +2,7 @@ import ActivityIndicator from "@/components/activityIndicator";
 import Pagination from "@/components/pagination";
 import AddModal from "../AddModal/AddModal";
 import EditMovimentModalEditar from "../EditModal/AddMovimentModal";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -67,31 +68,59 @@ const ClubeTable = () => {
               <th className="py-2 px-4 text-left">Id</th>
               <th className="py-2 px-4 text-left">Nome</th>
               <th className="py-2 px-4 text-left">Email</th>
+              <th className="py-2 px-4 text-left">Telefone</th>
               <th className="py-2 px-4 text-center">Ano</th>
               <th className="py-2 px-4 text-center">Modalidade</th>
               <th className="py-2 px-4 text-left">Província</th>
               <th className="py-2 px-4 text-left">Dirigente</th>
+              <th className="py-2 px-4 text-center">Opções</th>
             </tr>
           </thead>
+
           <tbody>
             {movements?.length === 0 && (
               <tr>
-                <td colSpan={7} className="py-4 px-4 text-center">
+                <td colSpan={9} className="py-4 px-4 text-center">
                   {isLoadingMoviments ? <ActivityIndicator /> : "Sem dados"}
                 </td>
               </tr>
             )}
+
             {movements?.map((club, idx) => (
               <tr key={idx} className="border-b hover:bg-gray-50">
                 <td className="py-2 px-4">{club?.id}</td>
                 <td className="py-2 px-4 font-medium">{club?.name}</td>
                 <td className="py-2 px-4">{club?.email}</td>
+                <td className="py-2 px-4">{club?.telefone}</td>
                 <td className="py-2 px-4 text-center">{club?.ano}</td>
                 <td className="py-2 px-4 text-center">
                   {ModalidadeEnum?.[club?.modalidade]}
                 </td>
                 <td className="py-2 px-4">{club?.province?.name || "-"}</td>
                 <td className="py-2 px-4">{club?.dirigente?.name || "-"}</td>
+
+                {/* OPÇÕES */}
+                <td className="py-2 px-4">
+                  <div className="flex justify-center gap-3">
+                    {/* Editar */}
+                    <button
+                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                      title="Editar"
+                      onClick={() => handleEdit(club)}
+                    >
+                      <FaEdit size={14} />
+                    </button>
+
+                    {/* Eliminar */}
+                    <button
+                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      title="Eliminar"
+                      onClick={() => handleDelete(club?.id)}
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

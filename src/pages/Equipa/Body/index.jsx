@@ -1,6 +1,6 @@
 import Pagination from "@/components/pagination";
 import React, { useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import Select from "react-select";
 import { OrbitProgress } from "react-loading-indicators";
 
@@ -84,6 +84,7 @@ const CadastroEquipa = () => {
               <th className="py-2 px-4 text-left">Categoria</th>
               <th className="py-2 px-4 text-left">Escalão</th>
               <th className="py-2 px-4 text-left">Treinador</th>
+              <th className="py-2 px-4 text-center">Opções</th>
             </tr>
           </thead>
           <tbody>
@@ -93,6 +94,28 @@ const CadastroEquipa = () => {
                 <td className="py-2 px-4">{equipe.categoria}</td>
                 <td className="py-2 px-4">{equipe.escalao}</td>
                 <td className="py-2 px-4">{equipe.treinador}</td>
+                {/* OPÇÕES */}
+                <td className="py-2 px-4">
+                  <div className="flex justify-center gap-3">
+                    {/* Editar */}
+                    <button
+                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                      title="Editar"
+                      onClick={() => handleEdit(club)}
+                    >
+                      <FaEdit size={14} />
+                    </button>
+
+                    {/* Eliminar */}
+                    <button
+                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      title="Eliminar"
+                      onClick={() => handleDelete(club?.id)}
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

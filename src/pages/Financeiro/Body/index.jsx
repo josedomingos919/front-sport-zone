@@ -10,7 +10,13 @@ import { useEffect, useState } from "react";
 import { HttpStatus } from "@/utils/helper";
 import { PiExportBold } from "react-icons/pi";
 import { formatNumberPT } from "@/utils/helper/functions";
-import { FaPlus, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import {
+  FaPlus,
+  FaArrowUp,
+  FaArrowDown,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 import { DefaultPageSize, MovimentType } from "@/utils/helper/consts";
 
 const FinanceTable = () => {
@@ -75,6 +81,7 @@ const FinanceTable = () => {
               <th className="py-2 px-4 text-right">Valor</th>
               <th className="py-2 px-4 text-center">Tipo</th>
               <th className="py-2 px-4 text-center">Data</th>
+              <th className="py-2 px-4 text-center">Opções</th>
             </tr>
           </thead>
           <tbody>
@@ -106,6 +113,28 @@ const FinanceTable = () => {
                 <td className="py-2 px-4 text-center capitalize">{m.tipo}</td>
                 <td className="py-2 px-4 text-center capitalize">
                   {new Date(m.data).toLocaleDateString()}
+                </td>
+                {/* OPÇÕES */}
+                <td className="py-2 px-4">
+                  <div className="flex justify-center gap-3">
+                    {/* Editar */}
+                    <button
+                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                      title="Editar"
+                      onClick={() => handleEdit(club)}
+                    >
+                      <FaEdit size={14} />
+                    </button>
+
+                    {/* Eliminar */}
+                    <button
+                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      title="Eliminar"
+                      onClick={() => handleDelete(club?.id)}
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
