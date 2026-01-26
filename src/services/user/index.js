@@ -14,7 +14,7 @@ async function getAll(filter = {}) {
 
 async function search(value = "") {
   try {
-    const response = await axiosInstance.get(`user/search/${value}`);
+    const response = await axiosInstance.get(`users/search/${value}`);
 
     return response;
   } catch (error) {
@@ -22,4 +22,14 @@ async function search(value = "") {
   }
 }
 
-export const user = { getAll, search };
+async function add(data = {}) {
+  try {
+    const response = await axiosInstance.post("users/create", data);
+
+    return response;
+  } catch (error) {
+    return error?.response;
+  }
+}
+
+export const user = { getAll, search, add };

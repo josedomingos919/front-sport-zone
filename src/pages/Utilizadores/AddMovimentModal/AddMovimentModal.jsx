@@ -24,12 +24,17 @@ export default function AddMovimentModal({
 
   const isValidData = () => {
     if (
-      !newMovement?.descricao ||
-      !newMovement?.valor ||
-      !newMovement?.tipo?.value ||
-      !newMovement?.data
+      !newMovement?.name ||
+      !newMovement?.email ||
+      !newMovement?.password ||
+      !newMovement?.access?.value
     ) {
       toast.error("Por favor, preencha todos os campos correctamente.");
+      return false;
+    }
+
+    if (newMovement?.password?.length < 6) {
+      toast.error("Password deve ter no mínimo 6 caracteres.");
       return false;
     }
 
@@ -49,20 +54,20 @@ export default function AddMovimentModal({
     if (!isValidData()) return;
     setIsLoading(true);
 
-    const response = await service.financeiro.add({
-      descricao: newMovement?.descricao,
-      valor: Number(newMovement?.valor),
-      tipo: newMovement?.tipo?.value,
-      data: newMovement?.data,
+    const response = await service.user.add({
+      name: newMovement?.name,
+      email: newMovement?.email,
+      password: newMovement?.password,
+      access: newMovement?.access?.value,
     });
 
     if (response?.status == HttpStatus.CREATED) {
       clearForm();
-      toast.success("Movimento adicionado com sucesso!");
+      toast.success("Usuário adicionado com sucesso!");
       setShowModal(false);
       resetList();
     } else {
-      toast.error("Erro ao adicionar movimento. Tente novamente.");
+      toast.error("Erro ao adicionar usuário. Tente novamente.");
     }
 
     setIsLoading(false);
