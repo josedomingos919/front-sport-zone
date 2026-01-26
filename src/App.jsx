@@ -7,8 +7,8 @@ import {
 import Login from "@/pages/Login/Login";
 import NotFound from "@/pages/NotFound/NotFound";
 import Dashboard from "@/pages/Dashboard/Dashboard";
-import Timelines from "@/pages/Timelines/Timelines";
-import Minutes from "@/pages/Minutes/Minutes";
+import Timelines from "@/pages/Financeiro/Timelines";
+import Minutes from "@/pages/Equipa/Minutes";
 import Register from "@/pages/Register/Register";
 import ForgotPassword from "@/pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword/ResetPassword";
