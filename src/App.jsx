@@ -1,8 +1,8 @@
 import {
-  BrowserRouter as Router,
-  Routes,
   Route,
+  Routes,
   Navigate,
+  BrowserRouter as Router,
 } from "react-router-dom";
 import Login from "@/pages/Login/Login";
 import NotFound from "@/pages/NotFound/NotFound";
@@ -12,20 +12,32 @@ import Minutes from "@/pages/Equipa/Minutes";
 import Register from "@/pages/Register/Register";
 import ForgotPassword from "@/pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword/ResetPassword";
+import { useAppState } from "./store/appState";
 
 const App = () => {
+  const user = useAppState((state) => state.user);
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/timelines" element={<Timelines />} />
-        <Route path="/minutes" element={<Minutes />} />
-        <Route path="*" element={<NotFound />} />
+        {user ? (
+          <>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/timelines" element={<Timelines />} />
+            <Route path="/minutes" element={<Minutes />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        )}
       </Routes>
     </Router>
   );

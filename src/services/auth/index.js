@@ -1,7 +1,4 @@
 import { axiosInstance } from "../../api/axios";
-import { authActions } from "../../redux/features/auth/actions";
-import { dispatch } from "../../redux/store";
-import { appRoutesName } from "../../routes/appRoutesName";
 
 async function login({ phone = "", password = "" }) {
   try {
@@ -16,13 +13,6 @@ async function login({ phone = "", password = "" }) {
   }
 }
 
-async function logout(navigate) {
-  dispatch(authActions.logout());
-
-  if (navigate) navigate(appRoutesName.login);
-  else window.location.href = appRoutesName.login;
-}
-
 async function signup(data = {}) {
   try {
     const response = await axiosInstance.post("auth/signup", data);
@@ -33,4 +23,4 @@ async function signup(data = {}) {
   }
 }
 
-export const auth = { login, logout, signup };
+export const auth = { login, signup };

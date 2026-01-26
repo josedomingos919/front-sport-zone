@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -87,7 +88,14 @@ const Login = () => {
               </div>
             </div>
             <div className="mb-4">
-              <Button type="submit" variant="default" className="w-full">
+              <Button
+                onClick={() => {
+                  toast.error("Funcionalidade não implementada ainda!");
+                }}
+                type="submit"
+                variant="default"
+                className="w-full"
+              >
                 Entrar
               </Button>
             </div>

@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { FaEye, FaEyeSlash, FaFutbol } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
+import { service } from "@/services";
+import { HttpStatus } from "@/utils/helper";
+import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash, FaFutbol } from "react-icons/fa";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -16,8 +20,20 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const onRegister = (payload) => {
-    console.log(payload);
+  const onRegister = async (payload) => {
+    setIsLoading(true);
+
+    const response = await service.auth.signup(payload);
+
+    console.log({ payload, response });
+
+    if (response.status == HttpStatus.OK) {
+      toast.success("Conta criada com sucesso! Por favor, faça login.");
+    } else {
+      toast.error("Erro ao criar conta. Tente novamente.");
+    }
+
+    setIsLoading(false);
   };
 
   return (
