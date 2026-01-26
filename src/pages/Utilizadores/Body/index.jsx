@@ -5,7 +5,11 @@ import { FaPlus, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { PiExportBold } from "react-icons/pi";
 import ExportReportModal from "../ExportReport";
 import { service } from "@/services";
-import { DefaultPageSize, MovimentType } from "@/utils/helper/consts";
+import {
+  DefaultPageSize,
+  MovimentType,
+  UserAccessType,
+} from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
 import AddMovimentModal from "../AddMovimentModal/AddMovimentModal";
 import { formatNumberPT } from "@/utils/helper/functions";
@@ -83,7 +87,7 @@ const FinanceTable = () => {
                 <td className="py-2 px-4">{m?.name}</td>
                 <td className="py-2 px-4">{m?.email}</td>
                 <td className="py-2 px-4 text-center capitalize">
-                  {m?.access}
+                  {UserAccessType[m?.access]}
                 </td>
               </tr>
             ))}

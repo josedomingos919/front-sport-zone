@@ -6,6 +6,7 @@ import { HttpStatus } from "@/utils/helper";
 
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
+import { UserAccessTypeData } from "@/utils/helper/consts";
 
 export default function AddMovimentModal({
   showModal,
@@ -13,10 +14,10 @@ export default function AddMovimentModal({
   resetList,
 }) {
   const [newMovement, setNewMovement] = useState({
-    data: null,
-    tipo: null,
-    valor: null,
-    descricao: null,
+    name: null,
+    email: null,
+    access: null,
+    password: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -37,10 +38,10 @@ export default function AddMovimentModal({
 
   const clearForm = () => {
     setNewMovement({
-      tipo: null,
-      valor: null,
-      descricao: null,
-      data: null,
+      name: null,
+      email: null,
+      access: null,
+      password: null,
     });
   };
 
@@ -73,43 +74,57 @@ export default function AddMovimentModal({
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
-              <FaPlus className="mr-2" /> Adicionar Movimento
+              <FaPlus className="mr-2" /> Utilizadores
             </h2>
             <div className="flex flex-col gap-3">
               <div className="field flex flex-col">
                 <label className="text-sm" htmlFor="">
-                  Descrição
+                  Nome
                 </label>
                 <input
                   type="text"
-                  placeholder="Descrição"
+                  placeholder="ex.: João Silva"
                   className="border p-2 rounded"
-                  value={newMovement.descricao}
+                  value={newMovement.name}
                   onChange={(e) =>
                     setNewMovement({
                       ...newMovement,
-                      descricao: e.target.value,
+                      name: e.target.value,
                     })
                   }
                 />
               </div>
               <div className="field flex flex-col">
                 <label className="text-sm" htmlFor="">
-                  Valor
+                  Email
                 </label>
                 <input
-                  type="number"
-                  placeholder="Ex.: Valor"
+                  type="email"
+                  placeholder="ex.: Valor"
                   className="border p-2 rounded"
                   value={newMovement.valor}
                   onChange={(e) =>
-                    setNewMovement({ ...newMovement, valor: e.target.value })
+                    setNewMovement({ ...newMovement, email: e.target.value })
                   }
                 />
               </div>
               <div className="field flex flex-col">
                 <label className="text-sm" htmlFor="">
-                  Tipo
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  placeholder="ex.: 3idnk3i,dm"
+                  className="border p-2 rounded"
+                  value={newMovement.data}
+                  onChange={(e) =>
+                    setNewMovement({ ...newMovement, password: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <label className="text-sm" htmlFor="">
+                  Acesso
                 </label>
                 <Select
                   className="basic-single"
@@ -117,31 +132,14 @@ export default function AddMovimentModal({
                   isDisabled={false}
                   isClearable={true}
                   name="color"
-                  value={newMovement.tipo}
+                  value={newMovement.access}
                   onChange={(selectedOption) => {
                     setNewMovement({
                       ...newMovement,
-                      tipo: selectedOption,
+                      access: selectedOption,
                     });
                   }}
-                  options={[
-                    { value: "Entrada", label: "Entrada" },
-                    { value: "Saída", label: "Saída" },
-                  ]}
-                />
-              </div>
-              <div className="field flex flex-col">
-                <label className="text-sm" htmlFor="">
-                  Data
-                </label>
-                <input
-                  type="date"
-                  placeholder="Ex.: 11/02/2023"
-                  className="border p-2 rounded"
-                  value={newMovement.data}
-                  onChange={(e) =>
-                    setNewMovement({ ...newMovement, data: e.target.value })
-                  }
+                  options={UserAccessTypeData}
                 />
               </div>
               <div className="flex justify-end gap-2 mt-4">
