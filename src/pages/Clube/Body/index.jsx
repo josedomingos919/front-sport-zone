@@ -20,7 +20,7 @@ const ClubeTable = () => {
   const getAllMoviments = async ({ page = 1 }) => {
     setIsLoadingMoviments(true);
 
-    const response = await service.user.getAll({
+    const response = await service.clube.getAll({
       page: page,
       size: DefaultPageSize,
     });

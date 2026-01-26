@@ -3,34 +3,80 @@ import { service } from "@/services";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
 import { HttpStatus } from "@/utils/helper";
+import { ModalidadeData } from "@/utils/helper/consts";
 
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
-import { UserAccessTypeData } from "@/utils/helper/consts";
 
 export default function AddModal({ showModal, setShowModal, resetList }) {
   const [newMovement, setNewMovement] = useState({
     name: null,
+    ano: null,
     email: null,
-    access: null,
-    password: null,
+    telefone: null,
+    modalidade: null,
+    dirigente: null,
+    province: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   const isValidData = () => {
-    if (
-      !newMovement?.name ||
-      !newMovement?.email ||
-      !newMovement?.password ||
-      !newMovement?.access?.value
-    ) {
-      toast.error("Por favor, preencha todos os campos correctamente.");
+    // Nome
+    if (!newMovement?.name || newMovement.name.trim().length < 3) {
+      toast.error("Nome é obrigatório e deve ter pelo menos 3 caracteres.");
       return false;
     }
 
-    if (newMovement?.password?.length < 6) {
-      toast.error("Password deve ter no mínimo 6 caracteres.");
+    // Ano
+    const anoAtual = new Date().getFullYear();
+    if (
+      !newMovement?.ano ||
+      Number(newMovement.ano) < 1900 ||
+      Number(newMovement.ano) > anoAtual
+    ) {
+      toast.error(`Ano inválido. Deve estar entre 1900 e ${anoAtual}.`);
+      return false;
+    }
+
+    // Telefone
+    if (!newMovement?.telefone) {
+      toast.error("Telefone é obrigatório.");
+      return false;
+    }
+
+    if (!/^\d{9,15}$/.test(newMovement.telefone)) {
+      toast.error("Telefone inválido. Use apenas números (9 a 15 dígitos).");
+      return false;
+    }
+
+    // Email
+    if (!newMovement?.email) {
+      toast.error("Email é obrigatório.");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newMovement.email)) {
+      toast.error("Email inválido.");
+      return false;
+    }
+
+    // Modalidade
+    if (!newMovement?.modalidade?.value) {
+      toast.error("Selecione uma modalidade.");
+      return false;
+    }
+
+    // Dirigente
+    if (!newMovement?.dirigente?.value) {
+      toast.error("Selecione um dirigente.");
+      return false;
+    }
+
+    // Província
+    if (!newMovement?.province?.value) {
+      toast.error("Selecione uma província.");
       return false;
     }
 
@@ -40,9 +86,12 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
   const clearForm = () => {
     setNewMovement({
       name: null,
+      ano: null,
       email: null,
-      access: null,
-      password: null,
+      telefone: null,
+      modalidade: null,
+      dirigente: null,
+      province: null,
     });
   };
 
@@ -52,18 +101,21 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
 
     const response = await service.user.add({
       name: newMovement?.name,
+      ano: newMovement?.ano,
       email: newMovement?.email,
-      password: newMovement?.password,
-      access: newMovement?.access?.value,
+      telefone: newMovement?.telefone,
+      modalidade: newMovement?.modalidade?.value,
+      dirigenteId: newMovement?.dirigente?.value,
+      provinciaId: newMovement?.province?.value,
     });
 
     if (response?.status == HttpStatus.CREATED) {
       clearForm();
-      toast.success("Usuário adicionado com sucesso!");
+      toast.success("Clube adicionado com sucesso!");
       setShowModal(false);
       resetList();
     } else {
-      toast.error("Erro ao adicionar usuário. Tente novamente.");
+      toast.error("Erro ao adicionar clube. Tente novamente.");
     }
 
     setIsLoading(false);
@@ -97,35 +149,49 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
               </div>
               <div className="field flex flex-col">
                 <label className="text-sm" htmlFor="">
-                  Email
+                  Ano
                 </label>
                 <input
-                  type="email"
-                  placeholder="ex.: Valor"
+                  type="number"
+                  placeholder="ex.: 2027"
                   className="border p-2 rounded"
-                  value={newMovement.valor}
+                  value={newMovement.ano}
                   onChange={(e) =>
-                    setNewMovement({ ...newMovement, email: e.target.value })
+                    setNewMovement({ ...newMovement, ano: e.target.value })
                   }
                 />
               </div>
               <div className="field flex flex-col">
                 <label className="text-sm" htmlFor="">
-                  Senha
+                  Telefone
                 </label>
                 <input
-                  type="password"
-                  placeholder="ex.: 3idnk3i,dm"
+                  type="number"
+                  placeholder="ex.: 948847374"
                   className="border p-2 rounded"
-                  value={newMovement.data}
+                  value={newMovement.telefone}
                   onChange={(e) =>
-                    setNewMovement({ ...newMovement, password: e.target.value })
+                    setNewMovement({ ...newMovement, telefone: e.target.value })
+                  }
+                />
+              </div>
+              <div className="field flex flex-col">
+                <label className="text-sm" htmlFor="">
+                  Email
+                </label>
+                <input
+                  type="number"
+                  placeholder="ex.: joaquim@gmail.com"
+                  className="border p-2 rounded"
+                  value={newMovement.email}
+                  onChange={(e) =>
+                    setNewMovement({ ...newMovement, email: e.target.value })
                   }
                 />
               </div>
               <div>
                 <label className="text-sm" htmlFor="">
-                  Acesso
+                  Modalidade
                 </label>
                 <Select
                   className="basic-single"
@@ -133,14 +199,54 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   isDisabled={false}
                   isClearable={true}
                   name="color"
-                  value={newMovement.access}
+                  value={newMovement.modalidade}
                   onChange={(selectedOption) => {
                     setNewMovement({
                       ...newMovement,
-                      access: selectedOption,
+                      modalidade: selectedOption,
                     });
                   }}
-                  options={UserAccessTypeData}
+                  options={ModalidadeData}
+                />
+              </div>
+              <div>
+                <label className="text-sm" htmlFor="">
+                  Dirigente
+                </label>
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isClearable={true}
+                  name="color"
+                  value={newMovement.dirigente}
+                  onChange={(selectedOption) => {
+                    setNewMovement({
+                      ...newMovement,
+                      dirigente: selectedOption,
+                    });
+                  }}
+                  options={[]}
+                />
+              </div>
+              <div>
+                <label className="text-sm" htmlFor="">
+                  Província
+                </label>
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isDisabled={false}
+                  isClearable={true}
+                  name="color"
+                  value={newMovement.province}
+                  onChange={(selectedOption) => {
+                    setNewMovement({
+                      ...newMovement,
+                      province: selectedOption,
+                    });
+                  }}
+                  options={[]}
                 />
               </div>
               <div className="flex justify-end gap-2 mt-4">
