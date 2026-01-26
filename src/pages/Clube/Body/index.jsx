@@ -6,7 +6,11 @@ import EditMovimentModalEditar from "../EditModal/AddMovimentModal";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { service } from "@/services";
-import { DefaultPageSize, UserAccessType } from "@/utils/helper/consts";
+import {
+  DefaultPageSize,
+  ModalidadeEnum,
+  UserAccessType,
+} from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
 
 const ClubeTable = () => {
@@ -84,9 +88,9 @@ const ClubeTable = () => {
                 <td className="py-2 px-4">{club?.email}</td>
                 <td className="py-2 px-4 text-center">{club?.ano}</td>
                 <td className="py-2 px-4 text-center">
-                  {club?.modalidade?.name || club?.modalidade}
+                  {ModalidadeEnum?.[club?.modalidade]}
                 </td>
-                <td className="py-2 px-4">{club?.provincia?.name || "-"}</td>
+                <td className="py-2 px-4">{club?.province?.name || "-"}</td>
                 <td className="py-2 px-4">{club?.dirigente?.name || "-"}</td>
               </tr>
             ))}

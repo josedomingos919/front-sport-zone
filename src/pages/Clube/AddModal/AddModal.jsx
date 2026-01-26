@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { service } from "@/services";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
@@ -20,6 +20,8 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [dirigentes, setDirigentes] = useState([]);
+  const [provinces, setProvinces] = useState([]);
 
   const isValidData = () => {
     // Nome
@@ -99,7 +101,7 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
     if (!isValidData()) return;
     setIsLoading(true);
 
-    const response = await service.user.add({
+    const response = await service.clube.add({
       name: newMovement?.name,
       ano: newMovement?.ano,
       email: newMovement?.email,
@@ -120,6 +122,35 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
 
     setIsLoading(false);
   };
+
+  const getAllDirigentes = () => {
+    service.user.getAllDirigentes().then((response) => {
+      if (response?.status == HttpStatus.OK) {
+        const dirigentesOptions = response?.data?.map((dirigente) => ({
+          value: dirigente?.id,
+          label: dirigente?.name,
+        }));
+        setDirigentes(dirigentesOptions);
+      }
+    });
+  };
+
+  const getAllProvinces = () => {
+    service.province.getAll().then((response) => {
+      if (response?.status == HttpStatus.OK) {
+        const provincesOptions = response?.data?.map((province) => ({
+          value: province?.id,
+          label: province?.name,
+        }));
+        setProvinces(provincesOptions);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getAllProvinces();
+    getAllDirigentes();
+  }, []);
 
   return (
     <>
@@ -209,7 +240,7 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   onChange={(province) =>
                     setNewMovement({ ...newMovement, province })
                   }
-                  options={[]}
+                  options={provinces}
                   isClearable
                 />
               </div>
@@ -222,7 +253,7 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   onChange={(dirigente) =>
                     setNewMovement({ ...newMovement, dirigente })
                   }
-                  options={[]}
+                  options={dirigentes}
                   isClearable
                 />
               </div>

@@ -3,6 +3,7 @@ import { user } from "./user";
 import { cache } from "./cache";
 import { clube } from "./clube";
 import { teacher } from "./teacher";
+import { province } from "./province";
 import { financeiro } from "./financeiro";
 
 export const service = {
@@ -11,5 +12,6 @@ export const service = {
   clube,
   cache,
   teacher,
+  province,
   financeiro,
 };
