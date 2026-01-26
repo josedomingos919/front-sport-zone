@@ -4,7 +4,7 @@ async function getAll(filter = {}) {
   const queryParams = new URLSearchParams(filter);
 
   try {
-    const response = await axiosInstance.get(`users?${queryParams}`);
+    const response = await axiosInstance.get(`users/all/?${queryParams}`);
 
     return response;
   } catch (error) {

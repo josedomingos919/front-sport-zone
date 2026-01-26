@@ -14,6 +14,7 @@ import Timelines from "@/pages/Financeiro/Timelines";
 import ForgotPassword from "@/pages/ForgotPassword/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword/ResetPassword";
 import { useInitApp } from "./hooks/useInitApp/useInitApp";
+import Utilizadores from "./pages/Utilizadores/Utilizadores";
 
 const App = () => {
   useInitApp();
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/financeiro" element={<Timelines />} />
             <Route path="/equipa" element={<Minutes />} />
+            <Route path="/utilizadores" element={<Utilizadores />} />
             <Route path="*" element={<NotFound />} />
           </>
         ) : (
