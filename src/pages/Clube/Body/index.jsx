@@ -24,11 +24,11 @@ const ClubeTable = () => {
       page: page,
       size: DefaultPageSize,
     });
-    console.log("USERS ", response);
+    console.log("clubs ", response);
 
     if (response?.status === HttpStatus.OK) {
       setTotalPages(response?.data?.totalPage);
-      setMovements(response?.data?.users);
+      setMovements(response?.data?.clubes);
     }
 
     setIsLoadingMoviments(false);
@@ -63,25 +63,31 @@ const ClubeTable = () => {
               <th className="py-2 px-4 text-left">Id</th>
               <th className="py-2 px-4 text-left">Nome</th>
               <th className="py-2 px-4 text-left">Email</th>
-              <th className="py-2 px-4 text-center">Acesso</th>
+              <th className="py-2 px-4 text-center">Ano</th>
+              <th className="py-2 px-4 text-center">Modalidade</th>
+              <th className="py-2 px-4 text-left">Província</th>
+              <th className="py-2 px-4 text-left">Dirigente</th>
             </tr>
           </thead>
           <tbody>
-            {movements?.length == 0 ? (
+            {movements?.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-4 px-4 text-center">
+                <td colSpan={7} className="py-4 px-4 text-center">
                   {isLoadingMoviments ? <ActivityIndicator /> : "Sem dados"}
                 </td>
               </tr>
-            ) : null}
-            {movements.map((m, idx) => (
+            )}
+            {movements?.map((club, idx) => (
               <tr key={idx} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{m?.id}</td>
-                <td className="py-2 px-4">{m?.name}</td>
-                <td className="py-2 px-4">{m?.email}</td>
-                <td className="py-2 px-4 text-center capitalize">
-                  {UserAccessType[m?.access]}
+                <td className="py-2 px-4">{club?.id}</td>
+                <td className="py-2 px-4 font-medium">{club?.name}</td>
+                <td className="py-2 px-4">{club?.email}</td>
+                <td className="py-2 px-4 text-center">{club?.ano}</td>
+                <td className="py-2 px-4 text-center">
+                  {club?.modalidade?.name || club?.modalidade}
                 </td>
+                <td className="py-2 px-4">{club?.provincia?.name || "-"}</td>
+                <td className="py-2 px-4">{club?.dirigente?.name || "-"}</td>
               </tr>
             ))}
           </tbody>

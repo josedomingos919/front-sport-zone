@@ -125,32 +125,30 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
     <>
       {showModal ? (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
             <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
               <FaPlus className="mr-2" /> Clube
             </h2>
-            <div className="flex flex-col gap-3">
-              <div className="field flex flex-col">
-                <label className="text-sm" htmlFor="">
-                  Nome
-                </label>
+
+            {/* FORM GRID */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Nome */}
+              <div className="field flex flex-col col-span-2">
+                <label className="text-sm">Nome</label>
                 <input
                   type="text"
                   placeholder="ex.: João Silva"
                   className="border p-2 rounded"
                   value={newMovement.name}
                   onChange={(e) =>
-                    setNewMovement({
-                      ...newMovement,
-                      name: e.target.value,
-                    })
+                    setNewMovement({ ...newMovement, name: e.target.value })
                   }
                 />
               </div>
+
+              {/* Ano */}
               <div className="field flex flex-col">
-                <label className="text-sm" htmlFor="">
-                  Ano
-                </label>
+                <label className="text-sm">Ano</label>
                 <input
                   type="number"
                   placeholder="ex.: 2027"
@@ -161,10 +159,10 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   }
                 />
               </div>
+
+              {/* Telefone */}
               <div className="field flex flex-col">
-                <label className="text-sm" htmlFor="">
-                  Telefone
-                </label>
+                <label className="text-sm">Telefone</label>
                 <input
                   type="number"
                   placeholder="ex.: 948847374"
@@ -175,12 +173,12 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   }
                 />
               </div>
-              <div className="field flex flex-col">
-                <label className="text-sm" htmlFor="">
-                  Email
-                </label>
+
+              {/* Email */}
+              <div className="field flex flex-col col-span-2">
+                <label className="text-sm">Email</label>
                 <input
-                  type="number"
+                  type="email"
                   placeholder="ex.: joaquim@gmail.com"
                   className="border p-2 rounded"
                   value={newMovement.email}
@@ -189,85 +187,67 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
                   }
                 />
               </div>
-              <div>
-                <label className="text-sm" htmlFor="">
-                  Modalidade
-                </label>
+
+              {/* Modalidade */}
+              <div className="flex flex-col">
+                <label className="text-sm">Modalidade</label>
                 <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  isDisabled={false}
-                  isClearable={true}
-                  name="color"
                   value={newMovement.modalidade}
-                  onChange={(selectedOption) => {
-                    setNewMovement({
-                      ...newMovement,
-                      modalidade: selectedOption,
-                    });
-                  }}
+                  onChange={(modalidade) =>
+                    setNewMovement({ ...newMovement, modalidade })
+                  }
                   options={ModalidadeData}
+                  isClearable
                 />
               </div>
-              <div>
-                <label className="text-sm" htmlFor="">
-                  Dirigente
-                </label>
+
+              {/* Província */}
+              <div className="flex flex-col">
+                <label className="text-sm">Província</label>
                 <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  isDisabled={false}
-                  isClearable={true}
-                  name="color"
-                  value={newMovement.dirigente}
-                  onChange={(selectedOption) => {
-                    setNewMovement({
-                      ...newMovement,
-                      dirigente: selectedOption,
-                    });
-                  }}
-                  options={[]}
-                />
-              </div>
-              <div>
-                <label className="text-sm" htmlFor="">
-                  Província
-                </label>
-                <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  isDisabled={false}
-                  isClearable={true}
-                  name="color"
                   value={newMovement.province}
-                  onChange={(selectedOption) => {
-                    setNewMovement({
-                      ...newMovement,
-                      province: selectedOption,
-                    });
-                  }}
+                  onChange={(province) =>
+                    setNewMovement({ ...newMovement, province })
+                  }
                   options={[]}
+                  isClearable
                 />
               </div>
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  disabled={isLoading}
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  onClick={() => {
-                    clearForm();
-                    setShowModal(false);
-                  }}
-                >
-                  Cancelar
-                </button>
-                <button
-                  disabled={isLoading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  onClick={addMovement}
-                >
-                  {isLoading ? <ActivityIndicator /> : "Adicionar"}
-                </button>
+
+              {/* Dirigente */}
+              <div className="flex flex-col col-span-2">
+                <label className="text-sm">Dirigente</label>
+                <Select
+                  value={newMovement.dirigente}
+                  onChange={(dirigente) =>
+                    setNewMovement({ ...newMovement, dirigente })
+                  }
+                  options={[]}
+                  isClearable
+                />
               </div>
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                disabled={isLoading}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => {
+                  clearForm();
+                  setShowModal(false);
+                }}
+              >
+                Cancelar
+              </button>
+
+              <button
+                disabled={isLoading}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={addMovement}
+              >
+                {isLoading ? <ActivityIndicator /> : "Adicionar"}
+              </button>
             </div>
           </div>
         </div>
