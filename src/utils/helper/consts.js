@@ -15,3 +15,14 @@ export const MovimentType = {
   ENTRADA: "Entrada",
   SAIDA: "Saída",
 };
+
+export const MovimentTypeData = [
+  {
+    label: "Estranda",
+    value: "Estranda",
+  },
+  {
+    label: "Saída",
+    value: "Saída",
+  },
+];

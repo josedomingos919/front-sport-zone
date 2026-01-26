@@ -7,30 +7,16 @@ import ExportReportModal from "../ExportReport";
 import { service } from "@/services";
 import { DefaultPageSize, MovimentType } from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
+import AddMovimentModal from "../AddMovimentModal/AddMovimentModal";
+import { formatNumberPT } from "@/utils/helper/functions";
 
 const FinanceTable = () => {
   const [movements, setMovements] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
-  const [newMovement, setNewMovement] = useState({
-    descricao: "",
-    valor: "",
-    tipo: "entrada",
-  });
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-
   const [isLoadingMoviments, setIsLoadingMoviments] = useState(false);
-
-  const addMovement = () => {
-    if (!newMovement.descricao || !newMovement.valor) return;
-    setMovements([
-      ...movements,
-      { ...newMovement, valor: Number(newMovement.valor) },
-    ]);
-    setNewMovement({ descricao: "", valor: "", tipo: "entrada" });
-    setShowModal(false);
-  };
 
   const getAllMoviments = async ({ page = 1 }) => {
     setIsLoadingMoviments(true);
@@ -39,8 +25,6 @@ const FinanceTable = () => {
       page: page,
       size: DefaultPageSize,
     });
-
-    console.log("Movements response:", response);
 
     if (response?.status === HttpStatus.OK) {
       setTotalPages(response?.data?.totalPage);
@@ -108,69 +92,21 @@ const FinanceTable = () => {
                   ) : (
                     <FaArrowDown className="inline mr-1" />
                   )}
-                  {m.valor.toLocaleString()} Kz
+                  {formatNumberPT(m.valor)} Kz
                 </td>
                 <td className="py-2 px-4 text-center capitalize">{m.tipo}</td>
+                <td className="py-2 px-4 text-center capitalize">
+                  {new Date(m.data).toLocaleDateString()}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
-              <FaPlus className="mr-2" /> Adicionar Movimento
-            </h2>
-            <div className="flex flex-col gap-3">
-              <input
-                type="text"
-                placeholder="Descrição"
-                className="border p-2 rounded"
-                value={newMovement.descricao}
-                onChange={(e) =>
-                  setNewMovement({ ...newMovement, descricao: e.target.value })
-                }
-              />
-              <input
-                type="number"
-                placeholder="Valor"
-                className="border p-2 rounded"
-                value={newMovement.valor}
-                onChange={(e) =>
-                  setNewMovement({ ...newMovement, valor: e.target.value })
-                }
-              />
-              <select
-                className="border p-2 rounded"
-                value={newMovement.tipo}
-                onChange={(e) =>
-                  setNewMovement({ ...newMovement, tipo: e.target.value })
-                }
-              >
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-              </select>
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  onClick={addMovement}
-                >
-                  Adicionar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Add Moviment */}
+      <AddMovimentModal showModal={showModal} setShowModal={setShowModal} />
+
       <ExportReportModal
         show={showExport}
         onExport={() => {}}
