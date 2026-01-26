@@ -9,9 +9,11 @@ import { DefaultPageSize, MovimentType } from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
 import AddMovimentModal from "../AddMovimentModal/AddMovimentModal";
 import { formatNumberPT } from "@/utils/helper/functions";
+import EditMovimentModalEditar from "../EditMovimentModalEditar/AddMovimentModal";
 
 const FinanceTable = () => {
   const [movements, setMovements] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [page, setPage] = useState(1);
@@ -83,7 +85,7 @@ const FinanceTable = () => {
             ) : null}
             {movements.map((m, idx) => (
               <tr key={idx} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{idx + 1}</td>
+                <td className="py-2 px-4">{m?.id}</td>
                 <td className="py-2 px-4">{m.descricao}</td>
                 <td
                   className={`py-2 px-4 text-right font-semibold ${
@@ -110,6 +112,11 @@ const FinanceTable = () => {
       </div>
 
       {/* Modal Add Moviment */}
+      <EditMovimentModalEditar
+        resetList={resetList}
+        showModal={showEditModal}
+        setShowModal={setShowEditModal}
+      />
       <AddMovimentModal
         resetList={resetList}
         showModal={showModal}
