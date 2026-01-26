@@ -12,11 +12,11 @@ export const sidebarmenus = [
   {
     title: "Financeiro",
     icon: <FaCommentsDollar />,
-    to: "/timelines",
+    to: "/financeiro",
   },
   {
     title: "Equipa",
     icon: <ImFlag />,
-    to: "/minutes",
+    to: "/equipa",
   },
 ];

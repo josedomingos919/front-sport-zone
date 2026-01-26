@@ -34,6 +34,11 @@ const FinanceTable = () => {
     setIsLoadingMoviments(false);
   };
 
+  const resetList = () => {
+    setPage(1);
+    getAllMoviments({ page: 1 });
+  };
+
   useEffect(() => {
     getAllMoviments({ page });
   }, [page]);
@@ -61,6 +66,7 @@ const FinanceTable = () => {
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-100">
             <tr>
+              <th className="py-2 px-4 text-left">Id</th>
               <th className="py-2 px-4 text-left">Descrição</th>
               <th className="py-2 px-4 text-right">Valor</th>
               <th className="py-2 px-4 text-center">Tipo</th>
@@ -79,6 +85,7 @@ const FinanceTable = () => {
             )}
             {movements.map((m, idx) => (
               <tr key={idx} className="border-b hover:bg-gray-50">
+                <td className="py-2 px-4">{idx + 1}</td>
                 <td className="py-2 px-4">{m.descricao}</td>
                 <td
                   className={`py-2 px-4 text-right font-semibold ${
@@ -105,11 +112,15 @@ const FinanceTable = () => {
       </div>
 
       {/* Modal Add Moviment */}
-      <AddMovimentModal showModal={showModal} setShowModal={setShowModal} />
-
+      <AddMovimentModal
+        resetList={resetList}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       <ExportReportModal
         show={showExport}
         onExport={() => {}}
+        resetList={resetList}
         onClose={() => setShowExport(false)}
       />
       <Pagination

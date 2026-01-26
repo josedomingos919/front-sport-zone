@@ -31,7 +31,7 @@ const Register = () => {
 
     console.log({ payload, response });
 
-    if (response.status == HttpStatus.CREATED) {
+    if (response?.status == HttpStatus.CREATED) {
       reset();
       toast.success("Conta criada com sucesso! Por favor, faça login.");
     } else {

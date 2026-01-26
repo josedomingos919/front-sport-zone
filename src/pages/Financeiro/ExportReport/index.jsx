@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaFileExport } from "react-icons/fa";
 
-const ExportReportModal = ({ show, onClose, onExport }) => {
+const ExportReportModal = ({ show, onClose, onExport, resetList }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 

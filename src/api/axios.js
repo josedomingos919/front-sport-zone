@@ -12,8 +12,9 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   function (config) {
     config.headers["Authorization"] = `Bearer ${
-      service.cache.getItem("login").token
+      service.cache.getItem("login")?.token
     }`;
+
     // Do something before request is sent
     return config;
   },
@@ -31,6 +32,13 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
+    if (error?.response?.status == HttpStatus.UNAUTHORIZED) {
+      useAppState.setState({ user: null });
+      service.cache.removeItem("login");
+      toast.error("Sessão expirada. Por favor, faça login novamente.");
+      window.location.href = "/login";
+    }
+
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     return Promise.reject(error);

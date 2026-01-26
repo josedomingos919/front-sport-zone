@@ -19,4 +19,15 @@ function getItem(key = "") {
   }
 }
 
-export const cache = { setItem, getItem };
+function removeItem(key = "") {
+  try {
+    localStorage.removeItem(key);
+    return true;
+  } catch (error) {
+    console.log(error);
+
+    return false;
+  }
+}
+
+export const cache = { setItem, getItem, removeItem };

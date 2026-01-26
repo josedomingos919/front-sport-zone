@@ -7,12 +7,16 @@ import { HttpStatus } from "@/utils/helper";
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
 
-export default function AddMovimentModal({ showModal, setShowModal }) {
+export default function AddMovimentModal({
+  showModal,
+  setShowModal,
+  resetList,
+}) {
   const [newMovement, setNewMovement] = useState({
+    data: null,
     tipo: null,
     valor: null,
     descricao: null,
-    data: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -55,6 +59,7 @@ export default function AddMovimentModal({ showModal, setShowModal }) {
       clearForm();
       toast.success("Movimento adicionado com sucesso!");
       setShowModal(false);
+      resetList();
     } else {
       toast.error("Erro ao adicionar movimento. Tente novamente.");
     }

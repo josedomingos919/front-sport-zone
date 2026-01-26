@@ -34,9 +34,9 @@ const Login = () => {
 
     const response = await service.auth.login(payload);
 
-    console.log({ payload, response });
+    console.log({ response });
 
-    if (response.status == HttpStatus.OK) {
+    if (response?.status == HttpStatus.OK) {
       reset();
       service.cache.setItem("login", response.data);
       setUser(response?.data?.user);
