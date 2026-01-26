@@ -10,11 +10,18 @@ import {
 import SidebarMobile from "../Sidebar/SidebarMobile";
 import { useAppState } from "@/store/appState";
 import { getIniciais } from "@/utils/helper/functions";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = useAppState((state) => state.user);
+  const setUser = useAppState((state) => state.setUser);
+  const navigate = useNavigate();
 
-  console.log("User Navbar:", user);
+  function handleLogout() {
+    setUser(null);
+    localStorage.removeItem("login");
+    navigate("/login");
+  }
 
   return (
     <nav className="bg-white p-4 shadow">
@@ -42,7 +49,9 @@ const Navbar = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Sair</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleLogout()}>
+                Sair
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
