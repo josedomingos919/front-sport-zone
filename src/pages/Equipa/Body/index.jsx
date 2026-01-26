@@ -1,10 +1,23 @@
 import Pagination from "@/components/pagination";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
+import Select from "react-select";
 
 const initialEquipes = [
-  { id: 1, categoria: "Futebol", escalao: "Sub-17", treinador: "João Silva" },
-  { id: 2, categoria: "Basquete", escalao: "Sénior", treinador: "Maria Costa" },
+  {
+    id: 1,
+    name: "ACM - Acemilan",
+    categoria: "Futebol",
+    escalao: "Sub-17",
+    treinador: "João Silva",
+  },
+  {
+    id: 2,
+    name: "BVB - Dormund",
+    categoria: "Basquete",
+    escalao: "Sénior",
+    treinador: "Maria Costa",
+  },
 ];
 
 const CadastroEquipa = () => {
@@ -57,6 +70,7 @@ const CadastroEquipa = () => {
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-100">
             <tr>
+              <th className="py-2 px-4 text-left">Nome</th>
               <th className="py-2 px-4 text-left">Categoria</th>
               <th className="py-2 px-4 text-left">Escalão</th>
               <th className="py-2 px-4 text-left">Treinador</th>
@@ -65,6 +79,7 @@ const CadastroEquipa = () => {
           <tbody>
             {equipes.map((equipe) => (
               <tr key={equipe.id} className="border-b hover:bg-gray-50">
+                <td className="py-2 px-4">{equipe.name}</td>
                 <td className="py-2 px-4">{equipe.categoria}</td>
                 <td className="py-2 px-4">{equipe.escalao}</td>
                 <td className="py-2 px-4">{equipe.treinador}</td>
@@ -83,6 +98,20 @@ const CadastroEquipa = () => {
             </h2>
 
             <div className="flex flex-col gap-3">
+              <Select
+                className="basic-single"
+                classNamePrefix="select"
+                isDisabled={false}
+                isLoading={false}
+                isClearable={false}
+                isRtl={false}
+                isSearchable={false}
+                name="color"
+                options={[
+                  { value: "categoria1", label: "Categoria 1" },
+                  { value: "categoria2", label: "Categoria 2" },
+                ]}
+              />
               <input
                 type="text"
                 placeholder="Categoria"
@@ -115,7 +144,6 @@ const CadastroEquipa = () => {
                   </option>
                 ))}
               </select>
-
               <div className="flex justify-end gap-2 mt-4">
                 <button
                   className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
