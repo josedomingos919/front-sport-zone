@@ -40,10 +40,10 @@ export const UserAccessTypeData = [
     label: "Atleta",
     value: "ATLETA",
   },
-  {
-    label: "Visitante",
-    value: "VISITANTE",
-  },
+  // {
+  //   label: "Visitante",
+  //   value: "VISITANTE",
+  // },
   {
     label: "Treinador",
     value: "TREINADOR",
