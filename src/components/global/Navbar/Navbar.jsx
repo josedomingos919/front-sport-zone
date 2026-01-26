@@ -34,10 +34,9 @@ const Navbar = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>Opções</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Perfil</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem>Sair</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
