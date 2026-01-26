@@ -2,6 +2,7 @@ import Pagination from "@/components/pagination";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Select from "react-select";
+import { OrbitProgress } from "react-loading-indicators";
 
 const initialEquipes = [
   {
@@ -62,7 +63,16 @@ const CadastroEquipa = () => {
         onClick={() => setShowModal(true)}
         className="flex items-center bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded shadow mb-4"
       >
-        <FaPlus className="mr-2" /> Nova
+        {false ? (
+          <div className="smal-indicator">
+            <OrbitProgress color="#ffff" size="medium" />
+          </div>
+        ) : (
+          <>
+            {" "}
+            <FaPlus className="mr-2" /> Nova
+          </>
+        )}
       </button>
       <hr />
       {/* Tabela */}
