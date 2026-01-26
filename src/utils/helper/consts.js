@@ -57,3 +57,29 @@ export const UserAccessTypeData = [
     value: "ADMINISTRADOR_DO_SISTEMA",
   },
 ];
+
+export const ModalidadeData = [
+  { value: "FUTEBOL", label: "Futebol" },
+  { value: "BASQUETEBOL", label: "Basquetebol" },
+  { value: "VOLEIBOL", label: "Voleibol" },
+  { value: "TENIS", label: "Ténis" },
+  { value: "TENIS_DE_MESA", label: "Ténis de mesa" },
+  { value: "ATLETISMO", label: "Atletismo" },
+  { value: "ARTES_MARCIAIS", label: "Artes marciais" },
+  { value: "CICLISMO", label: "Ciclismo" },
+  { value: "NATACAO", label: "Natação" },
+  { value: "HALTEROFILISMO", label: "Halterofilismo" },
+];
+
+export const ModalidadeEnum = {
+  FUTEBOL: "Futebol",
+  BASQUETEBOL: "Basquetebol",
+  VOLEIBOL: "Voleibol",
+  TENIS: "Ténis",
+  TENIS_DE_MESA: "Ténis de mesa",
+  ATLETISMO: "Atletismo",
+  ARTES_MARCIAIS: "Artes marciais",
+  CICLISMO: "Ciclismo",
+  NATACAO: "Natação",
+  HALTEROFILISMO: "Halterofilismo",
+};
