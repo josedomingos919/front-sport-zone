@@ -102,11 +102,11 @@ export default function AddAtletaModal({ showModal, setShowModal, resetList }) {
   };
 
   const getUsers = async () => {
-    const response = await service.user.getAll({ page: 1, size: 1000 });
+    const response = await service.user.getAllAtletas();
 
     if (response?.status === HttpStatus.OK) {
       setUsers(
-        response.data.users.map((u) => ({
+        response.data.map((u) => ({
           value: u.id,
           label: u.name,
         }))

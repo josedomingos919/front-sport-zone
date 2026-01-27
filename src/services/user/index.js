@@ -22,6 +22,16 @@ async function getAllDirigentes() {
   }
 }
 
+async function getAllAtletas() {
+  try {
+    const response = await axiosInstance.get("users/atleta");
+
+    return response;
+  } catch (error) {
+    return error?.response;
+  }
+}
+
 async function getAllTreinadores() {
   try {
     const response = await axiosInstance.get("users/treinadores");
@@ -56,6 +66,7 @@ export const user = {
   getAll,
   search,
   add,
+  getAllAtletas,
   getAllDirigentes,
   getAllTreinadores,
 };
