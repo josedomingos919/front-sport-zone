@@ -3,7 +3,7 @@ import ClubeTable from "./Body";
 
 import { Helmet } from "react-helmet-async";
 
-const Clube = () => {
+const Atletas = () => {
   return (
     <>
       <Helmet>
@@ -17,4 +17,4 @@ const Clube = () => {
   );
 };
 
-export default Clube;
+export default Atletas;

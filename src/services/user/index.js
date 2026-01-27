@@ -22,6 +22,16 @@ async function getAllDirigentes() {
   }
 }
 
+async function getAllTreinadores() {
+  try {
+    const response = await axiosInstance.get("users/treinadores");
+
+    return response;
+  } catch (error) {
+    return error?.response;
+  }
+}
+
 async function search(value = "") {
   try {
     const response = await axiosInstance.get(`users/search/${value}`);
@@ -42,4 +52,10 @@ async function add(data = {}) {
   }
 }
 
-export const user = { getAll, search, add, getAllDirigentes };
+export const user = {
+  getAll,
+  search,
+  add,
+  getAllDirigentes,
+  getAllTreinadores,
+};

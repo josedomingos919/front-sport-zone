@@ -1,116 +1,127 @@
+import ActivityIndicator from "@/components/activityIndicator";
 import Pagination from "@/components/pagination";
-import React, { useState } from "react";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import Select from "react-select";
-import { OrbitProgress } from "react-loading-indicators";
+import AddModal from "../AddModal/AddModal";
 
-const initialEquipes = [
-  {
-    id: 1,
-    name: "ACM - Acemilan",
-    categoria: "Futebol",
-    escalao: "Sub-17",
-    treinador: "João Silva",
-  },
-  {
-    id: 2,
-    name: "BVB - Dormund",
-    categoria: "Basquete",
-    escalao: "Sénior",
-    treinador: "Maria Costa",
-  },
-];
+import React, { useEffect, useState } from "react";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
-const CadastroEquipa = () => {
-  const [equipes, setEquipes] = useState(initialEquipes);
+import { service } from "@/services";
+import { DefaultPageSize } from "@/utils/helper/consts";
+import { HttpStatus } from "@/utils/helper";
+
+const EquipaTable = () => {
+  const [equipas, setEquipas] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [newEquipa, setNewEquipa] = useState({
-    categoria: "",
-    escalao: "",
-    userId: "",
-  });
+  const [selectedEquipa, setSelectedEquipa] = useState(null);
 
-  // Simulando lista de treinadores
-  const treinadores = [
-    { id: 1, nome: "João Silva" },
-    { id: 2, nome: "Maria Costa" },
-    { id: 3, nome: "Carlos Mendes" },
-  ];
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const addEquipa = () => {
-    if (!newEquipa.categoria || !newEquipa.escalao || !newEquipa.userId) return;
-    const treinadorNome = treinadores.find(
-      (t) => t.id === parseInt(newEquipa.userId)
-    )?.nome;
+  const getAllEquipas = async ({ page = 1 }) => {
+    setIsLoading(true);
 
-    setEquipes([
-      ...equipes,
-      {
-        id: equipes.length + 1,
-        categoria: newEquipa.categoria,
-        escalao: newEquipa.escalao,
-        treinador: treinadorNome || "N/A",
-      },
-    ]);
-    setNewEquipa({ categoria: "", escalao: "", userId: "" });
-    setShowModal(false);
+    const response = await service.equipa.getAll({
+      page,
+      size: DefaultPageSize,
+    });
+
+    if (response?.status === HttpStatus.OK) {
+      setEquipas(response?.data?.equipas || []);
+      setTotalPages(response?.data?.totalPage || 0);
+    }
+
+    setIsLoading(false);
   };
 
+  const resetList = () => {
+    setPage(1);
+    getAllEquipas({ page: 1 });
+  };
+
+  const handleEdit = (equipa) => {
+    setSelectedEquipa(equipa);
+    setShowEditModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Tem certeza que deseja eliminar esta equipa?")) return;
+
+    const response = await service.equipa.delete(id);
+    if (response?.status === HttpStatus.OK) {
+      resetList();
+    }
+  };
+
+  useEffect(() => {
+    getAllEquipas({ page });
+  }, [page]);
+
   return (
-    <div className="pt-8">
-      {/* Botão abrir modal */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="flex items-center bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded shadow mb-4"
-      >
-        {false ? (
-          <div className="smal-indicator">
-            <OrbitProgress color="#ffff" size="medium" />
-          </div>
-        ) : (
-          <>
-            {" "}
-            <FaPlus className="mr-2" /> Nova
-          </>
-        )}
-      </button>
+    <div>
+      {/* BOTÃO NOVO */}
+      <div className="flex justify-start pt-8 mb-4">
+        <button
+          className="flex items-center bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded shadow"
+          onClick={() => setShowModal(true)}
+        >
+          <FaPlus className="mr-2" /> Nova Equipa
+        </button>
+      </div>
+
       <hr />
-      {/* Tabela */}
-      <div className="overflow-x-auto">
+
+      {/* TABELA */}
+      <div className="overflow-x-auto mt-4">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-2 px-4 text-left">Nome</th>
-              <th className="py-2 px-4 text-left">Categoria</th>
+              <th className="py-2 px-4 text-left">Id</th>
+              <th className="py-2 px-4 text-left min-w-[250px]">Nome</th>
               <th className="py-2 px-4 text-left">Escalão</th>
+              <th className="py-2 px-4 text-left">Categoria</th>
+              <th className="py-2 px-4 text-left">Clube</th>
               <th className="py-2 px-4 text-left">Treinador</th>
               <th className="py-2 px-4 text-center">Opções</th>
             </tr>
           </thead>
+
           <tbody>
-            {equipes.map((equipe) => (
-              <tr key={equipe.id} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{equipe.name}</td>
-                <td className="py-2 px-4">{equipe.categoria}</td>
-                <td className="py-2 px-4">{equipe.escalao}</td>
-                <td className="py-2 px-4">{equipe.treinador}</td>
+            {equipas.length === 0 && (
+              <tr>
+                <td colSpan={7} className="py-4 text-center">
+                  {isLoading ? <ActivityIndicator /> : "Sem dados"}
+                </td>
+              </tr>
+            )}
+
+            {equipas.map((equipa, idx) => (
+              <tr key={idx} className="border-b hover:bg-gray-50">
+                <td className="py-2 px-4">{equipa?.id}</td>
+                <td className="py-2 px-4 font-medium whitespace-nowrap">
+                  {equipa?.name}
+                </td>
+                <td className="py-2 px-4">{equipa?.escalao}</td>
+                <td className="py-2 px-4">{equipa?.categoria}</td>
+                <td className="py-2 px-4">{equipa?.clube?.name || "-"}</td>
+                <td className="py-2 px-4">{equipa?.treinador?.name || "-"}</td>
+
                 {/* OPÇÕES */}
                 <td className="py-2 px-4">
                   <div className="flex justify-center gap-3">
-                    {/* Editar */}
                     <button
-                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition"
+                      className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
                       title="Editar"
-                      onClick={() => handleEdit(club)}
+                      onClick={() => handleEdit(equipa)}
                     >
                       <FaEdit size={14} />
                     </button>
 
-                    {/* Eliminar */}
                     <button
-                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition"
+                      className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200"
                       title="Eliminar"
-                      onClick={() => handleDelete(club?.id)}
+                      onClick={() => handleDelete(equipa.id)}
                     >
                       <FaTrash size={14} />
                     </button>
@@ -121,82 +132,22 @@ const CadastroEquipa = () => {
           </tbody>
         </table>
       </div>
-      <Pagination currentPage={6} totalPages={33} onPageChange={() => {}} />
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <FaPlus className="mr-2" /> Criar Equipa
-            </h2>
 
-            <div className="flex flex-col gap-3">
-              <Select
-                className="basic-single"
-                classNamePrefix="select"
-                isDisabled={false}
-                isLoading={false}
-                isClearable={false}
-                isRtl={false}
-                isSearchable={false}
-                name="color"
-                options={[
-                  { value: "categoria1", label: "Categoria 1" },
-                  { value: "categoria2", label: "Categoria 2" },
-                ]}
-              />
-              <input
-                type="text"
-                placeholder="Categoria"
-                className="border p-2 rounded"
-                value={newEquipa.categoria}
-                onChange={(e) =>
-                  setNewEquipa({ ...newEquipa, categoria: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                placeholder="Escalão"
-                className="border p-2 rounded"
-                value={newEquipa.escalao}
-                onChange={(e) =>
-                  setNewEquipa({ ...newEquipa, escalao: e.target.value })
-                }
-              />
-              <select
-                className="border p-2 rounded"
-                value={newEquipa.userId}
-                onChange={(e) =>
-                  setNewEquipa({ ...newEquipa, userId: e.target.value })
-                }
-              >
-                <option value="">Selecionar Treinador</option>
-                {treinadores.map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.nome}
-                  </option>
-                ))}
-              </select>
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
-                  onClick={addEquipa}
-                >
-                  Criar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* MODAIS */}
+      <AddModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        resetList={resetList}
+      />
+
+      {/* PAGINAÇÃO */}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 };
 
-export default CadastroEquipa;
+export default EquipaTable;
