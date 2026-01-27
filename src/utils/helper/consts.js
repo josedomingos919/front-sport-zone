@@ -83,3 +83,35 @@ export const ModalidadeEnum = {
   NATACAO: "Natação",
   HALTEROFILISMO: "Halterofilismo",
 };
+
+export const CategoriaOptions = [
+  { value: "MASCULINO", label: "Masculino" },
+  { value: "FEMININO", label: "Feminino" },
+  { value: "MISTO", label: "Misto" },
+];
+
+export const EscalaoOptions = [
+  { value: "SUB_9", label: "Sub-9" },
+  { value: "SUB_11", label: "Sub-11" },
+  { value: "SUB_13", label: "Sub-13" },
+  { value: "SUB_15", label: "Sub-15" },
+  { value: "SUB_17", label: "Sub-17" },
+  { value: "SUB_19", label: "Sub-19" },
+  { value: "SENIOR", label: "Sénior" },
+];
+
+export const CategoriaOptionsEnum = {
+  MASCULINO: "Masculino",
+  FEMININO: "Feminino",
+  MISTO: "Misto",
+};
+
+export const EscalaoOptionsEnum = {
+  SUB_9: "Sub-9",
+  SUB_11: "Sub-11",
+  SUB_13: "Sub-13",
+  SUB_15: "Sub-15",
+  SUB_17: "Sub-17",
+  SUB_19: "Sub-19",
+  SENIOR: "Sénior",
+};

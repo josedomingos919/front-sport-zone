@@ -6,12 +6,15 @@ import { HttpStatus } from "@/utils/helper";
 
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
+import { CategoriaOptions, EscalaoOptions } from "@/utils/helper/consts";
+
+/* ===== OPTIONS ===== */
 
 export default function AddModal({ showModal, setShowModal, resetList }) {
   const [newEquipa, setNewEquipa] = useState({
     nome: "",
-    categoria: "",
-    escalao: "",
+    categoria: null,
+    escalao: null,
     clube: null,
     treinador: null,
   });
@@ -27,12 +30,12 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
       return false;
     }
 
-    if (!newEquipa.categoria) {
+    if (!newEquipa?.categoria?.value) {
       toast.error("Categoria é obrigatória.");
       return false;
     }
 
-    if (!newEquipa.escalao) {
+    if (!newEquipa?.escalao?.value) {
       toast.error("Escalão é obrigatório.");
       return false;
     }
@@ -54,8 +57,8 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
   const clearForm = () => {
     setNewEquipa({
       nome: "",
-      categoria: "",
-      escalao: "",
+      categoria: null,
+      escalao: null,
       clube: null,
       treinador: null,
     });
@@ -67,8 +70,8 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
 
     const response = await service.equipa.add({
       nome: newEquipa.nome,
-      categoria: newEquipa.categoria,
-      escalao: newEquipa.escalao,
+      categoria: newEquipa.categoria.value,
+      escalao: newEquipa.escalao.value,
       clubeId: newEquipa.clube.value,
       treinadorId: newEquipa.treinador.value,
     });
@@ -87,10 +90,10 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
 
   /* ===================== LOAD DATA ===================== */
   const getAllClubes = () => {
-    service.clube.getAll({ page: 1, size: 1000 }).then((response) => {
+    service.clube.getAll({ page: 1, size: 100 }).then((response) => {
       if (response?.status === HttpStatus.OK) {
         setClubes(
-          response.data.map((c) => ({
+          response.data.clubes.map((c) => ({
             value: c.id,
             label: c.name,
           }))
@@ -145,28 +148,26 @@ export default function AddModal({ showModal, setShowModal, resetList }) {
               {/* Categoria */}
               <div className="flex flex-col">
                 <label className="text-sm">Categoria</label>
-                <input
-                  type="text"
-                  className="border p-2 rounded"
-                  placeholder="ex.: Masculino"
+                <Select
                   value={newEquipa.categoria}
-                  onChange={(e) =>
-                    setNewEquipa({ ...newEquipa, categoria: e.target.value })
+                  onChange={(categoria) =>
+                    setNewEquipa({ ...newEquipa, categoria })
                   }
+                  options={CategoriaOptions}
+                  isClearable
                 />
               </div>
 
               {/* Escalão */}
               <div className="flex flex-col">
                 <label className="text-sm">Escalão</label>
-                <input
-                  type="text"
-                  className="border p-2 rounded"
-                  placeholder="ex.: Sub-17"
+                <Select
                   value={newEquipa.escalao}
-                  onChange={(e) =>
-                    setNewEquipa({ ...newEquipa, escalao: e.target.value })
+                  onChange={(escalao) =>
+                    setNewEquipa({ ...newEquipa, escalao })
                   }
+                  options={EscalaoOptions}
+                  isClearable
                 />
               </div>
 

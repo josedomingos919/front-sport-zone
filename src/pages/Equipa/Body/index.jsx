@@ -6,7 +6,11 @@ import React, { useEffect, useState } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 import { service } from "@/services";
-import { DefaultPageSize } from "@/utils/helper/consts";
+import {
+  CategoriaOptionsEnum,
+  DefaultPageSize,
+  EscalaoOptionsEnum,
+} from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
 
 const EquipaTable = () => {
@@ -58,6 +62,8 @@ const EquipaTable = () => {
     getAllEquipas({ page });
   }, [page]);
 
+  console.log("equipas", equipas);
+
   return (
     <div>
       {/* BOTÃO NOVO */}
@@ -73,7 +79,7 @@ const EquipaTable = () => {
       <hr />
 
       {/* TABELA */}
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-100">
             <tr>
@@ -100,10 +106,14 @@ const EquipaTable = () => {
               <tr key={idx} className="border-b hover:bg-gray-50">
                 <td className="py-2 px-4">{equipa?.id}</td>
                 <td className="py-2 px-4 font-medium whitespace-nowrap">
-                  {equipa?.name}
+                  {equipa?.nome}
                 </td>
-                <td className="py-2 px-4">{equipa?.escalao}</td>
-                <td className="py-2 px-4">{equipa?.categoria}</td>
+                <td className="py-2 px-4">
+                  {EscalaoOptionsEnum[equipa?.escalao]}
+                </td>
+                <td className="py-2 px-4">
+                  {CategoriaOptionsEnum[equipa?.categoria]}
+                </td>
                 <td className="py-2 px-4">{equipa?.clube?.name || "-"}</td>
                 <td className="py-2 px-4">{equipa?.treinador?.name || "-"}</td>
 
