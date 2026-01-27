@@ -1,288 +1,250 @@
-import { useEffect, useState } from "react";
 import { service } from "@/services";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
 import { HttpStatus } from "@/utils/helper";
-import { ModalidadeData } from "@/utils/helper/consts";
+import { useEffect, useState } from "react";
+import { PosicaoOptions } from "@/utils/helper/consts";
 
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
 
-export default function AddModal({ showModal, setShowModal, resetList }) {
-  const [newMovement, setNewMovement] = useState({
-    name: null,
-    ano: null,
-    email: null,
-    telefone: null,
-    modalidade: null,
-    dirigente: null,
-    province: null,
+export default function AddAtletaModal({ showModal, setShowModal, resetList }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [equipas, setEquipas] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const [form, setForm] = useState({
+    nome: "",
+    nascimento: "",
+    posicao: "",
+    publico: false,
+    foto: "", // Base64
+    equipa: null,
+    user: null,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [dirigentes, setDirigentes] = useState([]);
-  const [provinces, setProvinces] = useState([]);
-
-  const isValidData = () => {
-    // Nome
-    if (!newMovement?.name || newMovement.name.trim().length < 3) {
-      toast.error("Nome é obrigatório e deve ter pelo menos 3 caracteres.");
+  /* ---------------- VALIDATION ---------------- */
+  const isValid = () => {
+    if (!form.user?.value) {
+      toast.error("Selecione um utilizador.");
       return false;
     }
 
-    // Ano
-    const anoAtual = new Date().getFullYear();
-    if (
-      !newMovement?.ano ||
-      Number(newMovement.ano) < 1900 ||
-      Number(newMovement.ano) > anoAtual
-    ) {
-      toast.error(`Ano inválido. Deve estar entre 1900 e ${anoAtual}.`);
+    if (!form.nascimento) {
+      toast.error("Data de nascimento é obrigatória.");
       return false;
     }
 
-    // Telefone
-    if (!newMovement?.telefone) {
-      toast.error("Telefone é obrigatório.");
+    if (!form.posicao) {
+      toast.error("Posição é obrigatória.");
       return false;
     }
 
-    if (!/^\d{9,15}$/.test(newMovement.telefone)) {
-      toast.error("Telefone inválido. Use apenas números (9 a 15 dígitos).");
-      return false;
-    }
-
-    // Email
-    if (!newMovement?.email) {
-      toast.error("Email é obrigatório.");
-      return false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(newMovement.email)) {
-      toast.error("Email inválido.");
-      return false;
-    }
-
-    // Modalidade
-    if (!newMovement?.modalidade?.value) {
-      toast.error("Selecione uma modalidade.");
-      return false;
-    }
-
-    // Dirigente
-    if (!newMovement?.dirigente?.value) {
-      toast.error("Selecione um dirigente.");
-      return false;
-    }
-
-    // Província
-    if (!newMovement?.province?.value) {
-      toast.error("Selecione uma província.");
+    if (!form.equipa?.value) {
+      toast.error("Selecione uma equipa.");
       return false;
     }
 
     return true;
   };
 
+  /* ---------------- ACTIONS ---------------- */
   const clearForm = () => {
-    setNewMovement({
-      name: null,
-      ano: null,
-      email: null,
-      telefone: null,
-      modalidade: null,
-      dirigente: null,
-      province: null,
+    setForm({
+      nome: "",
+      nascimento: "",
+      posicao: "",
+      publico: false,
+      foto: "",
+      equipa: null,
+      user: null,
     });
   };
 
-  const addMovement = async () => {
-    if (!isValidData()) return;
+  const addAtleta = async () => {
+    if (!isValid()) return;
+
     setIsLoading(true);
 
-    const response = await service.clube.add({
-      name: newMovement?.name,
-      ano: newMovement?.ano,
-      email: newMovement?.email,
-      telefone: newMovement?.telefone,
-      modalidade: newMovement?.modalidade?.value,
-      dirigenteId: newMovement?.dirigente?.value,
-      provinciaId: newMovement?.province?.value,
+    const response = await service.atleta.add({
+      nascimento: form.nascimento,
+      posicao: form.posicao,
+      publico: form.publico,
+      foto: form.foto || null,
+      equipaId: form.equipa.value,
+      userId: form.user.value,
     });
 
-    if (response?.status == HttpStatus.CREATED) {
+    if (response?.status === HttpStatus.CREATED) {
+      toast.success("Atleta cadastrado com sucesso!");
       clearForm();
-      toast.success("Clube adicionado com sucesso!");
       setShowModal(false);
       resetList();
     } else {
-      toast.error("Erro ao adicionar clube. Tente novamente.");
+      toast.error("Erro ao cadastrar atleta.");
     }
 
     setIsLoading(false);
   };
 
-  const getAllDirigentes = () => {
-    service.user.getAllDirigentes().then((response) => {
-      if (response?.status == HttpStatus.OK) {
-        const dirigentesOptions = response?.data?.map((dirigente) => ({
-          value: dirigente?.id,
-          label: dirigente?.name,
-        }));
-        setDirigentes(dirigentesOptions);
-      }
-    });
+  /* ---------------- LOAD DATA ---------------- */
+  const getEquipas = async () => {
+    const response = await service.equipa.getAll({ page: 1, size: 1000 });
+
+    if (response?.status === HttpStatus.OK) {
+      setEquipas(
+        response.data.equipas.map((e) => ({
+          value: e.id,
+          label: e.nome,
+        }))
+      );
+    }
   };
 
-  const getAllProvinces = () => {
-    service.province.getAll().then((response) => {
-      if (response?.status == HttpStatus.OK) {
-        const provincesOptions = response?.data?.map((province) => ({
-          value: province?.id,
-          label: province?.name,
-        }));
-        setProvinces(provincesOptions);
-      }
-    });
+  const getUsers = async () => {
+    const response = await service.user.getAll({ page: 1, size: 1000 });
+
+    if (response?.status === HttpStatus.OK) {
+      setUsers(
+        response.data.users.map((u) => ({
+          value: u.id,
+          label: u.name,
+        }))
+      );
+    }
   };
 
   useEffect(() => {
-    getAllProvinces();
-    getAllDirigentes();
-  }, []);
+    if (showModal) {
+      getEquipas();
+      getUsers();
+    }
+  }, [showModal]);
+
+  /* ---------------- HANDLE FILE ---------------- */
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm({ ...form, foto: reader.result });
+    };
+    reader.readAsDataURL(file); // Converte para Base64
+  };
+
+  /* ---------------- UI ---------------- */
+  if (!showModal) return null;
 
   return (
-    <>
-      {showModal ? (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-            <h2 className="text-xl font-semibold mb-4 flex flex-row items-center">
-              <FaPlus className="mr-2" /> Clube
-            </h2>
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <FaPlus className="mr-2" /> Cadastrar Atleta
+        </h2>
 
-            {/* FORM GRID */}
-            <div className="grid grid-cols-2 gap-4">
-              {/* Nome */}
-              <div className="field flex flex-col col-span-2">
-                <label className="text-sm">Nome</label>
+        <div className="grid grid-cols-2 gap-4">
+          {/* Utilizador */}
+          <div className="col-span-2">
+            <label className="text-sm ">Utilizador</label>
+            <Select
+              options={users}
+              value={form.user}
+              onChange={(user) => setForm({ ...form, user })}
+              isClearable
+            />
+          </div>
+
+          {/* Nascimento */}
+          <div>
+            <label className="text-sm">Nascimento</label>
+            <input
+              type="date"
+              className="border p-2 rounded w-full"
+              value={form.nascimento}
+              onChange={(e) => setForm({ ...form, nascimento: e.target.value })}
+            />
+          </div>
+
+          {/* Posição */}
+          <div>
+            <label className="text-sm">Posição</label>
+            <Select
+              options={PosicaoOptions}
+              value={
+                PosicaoOptions.find((p) => p.value === form.posicao) || null
+              }
+              onChange={(selected) =>
+                setForm({ ...form, posicao: selected?.value || "" })
+              }
+              isClearable
+            />
+          </div>
+
+          {/* Foto */}
+          <div className="col-span-2">
+            <div className="border rounded p-2">
+              <label className="text-sm">Foto</label>
+              <div className="border rounded">
                 <input
-                  type="text"
-                  placeholder="ex.: João Silva"
-                  className="border p-2 rounded"
-                  value={newMovement.name}
-                  onChange={(e) =>
-                    setNewMovement({ ...newMovement, name: e.target.value })
-                  }
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
                 />
               </div>
-
-              {/* Ano */}
-              <div className="field flex flex-col">
-                <label className="text-sm">Ano</label>
-                <input
-                  type="number"
-                  placeholder="ex.: 2027"
-                  className="border p-2 rounded"
-                  value={newMovement.ano}
-                  onChange={(e) =>
-                    setNewMovement({ ...newMovement, ano: e.target.value })
-                  }
+              {form.foto && (
+                <img
+                  src={form.foto}
+                  alt="Preview"
+                  className="mt-2 w-32 h-32 object-cover rounded border"
                 />
-              </div>
-
-              {/* Telefone */}
-              <div className="field flex flex-col">
-                <label className="text-sm">Telefone</label>
-                <input
-                  type="number"
-                  placeholder="ex.: 948847374"
-                  className="border p-2 rounded"
-                  value={newMovement.telefone}
-                  onChange={(e) =>
-                    setNewMovement({ ...newMovement, telefone: e.target.value })
-                  }
-                />
-              </div>
-
-              {/* Email */}
-              <div className="field flex flex-col col-span-2">
-                <label className="text-sm">Email</label>
-                <input
-                  type="email"
-                  placeholder="ex.: joaquim@gmail.com"
-                  className="border p-2 rounded"
-                  value={newMovement.email}
-                  onChange={(e) =>
-                    setNewMovement({ ...newMovement, email: e.target.value })
-                  }
-                />
-              </div>
-
-              {/* Modalidade */}
-              <div className="flex flex-col">
-                <label className="text-sm">Modalidade</label>
-                <Select
-                  value={newMovement.modalidade}
-                  onChange={(modalidade) =>
-                    setNewMovement({ ...newMovement, modalidade })
-                  }
-                  options={ModalidadeData}
-                  isClearable
-                />
-              </div>
-
-              {/* Província */}
-              <div className="flex flex-col">
-                <label className="text-sm">Província</label>
-                <Select
-                  value={newMovement.province}
-                  onChange={(province) =>
-                    setNewMovement({ ...newMovement, province })
-                  }
-                  options={provinces}
-                  isClearable
-                />
-              </div>
-
-              {/* Dirigente */}
-              <div className="flex flex-col col-span-2">
-                <label className="text-sm">Dirigente</label>
-                <Select
-                  value={newMovement.dirigente}
-                  onChange={(dirigente) =>
-                    setNewMovement({ ...newMovement, dirigente })
-                  }
-                  options={dirigentes}
-                  isClearable
-                />
-              </div>
-            </div>
-
-            {/* ACTIONS */}
-            <div className="flex justify-end gap-2 mt-6">
-              <button
-                disabled={isLoading}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                onClick={() => {
-                  clearForm();
-                  setShowModal(false);
-                }}
-              >
-                Cancelar
-              </button>
-
-              <button
-                disabled={isLoading}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={addMovement}
-              >
-                {isLoading ? <ActivityIndicator /> : "Adicionar"}
-              </button>
+              )}
             </div>
           </div>
+
+          {/* Equipa */}
+          <div>
+            <label className="text-sm">Equipa</label>
+            <Select
+              options={equipas}
+              value={form.equipa}
+              onChange={(equipe) => setForm({ ...form, equipa: equipe })}
+              isClearable
+            />
+          </div>
+
+          {/* Público */}
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              type="checkbox"
+              checked={form.publico}
+              onChange={(e) => setForm({ ...form, publico: e.target.checked })}
+            />
+            <label className="text-sm">Perfil público</label>
+          </div>
         </div>
-      ) : null}
-    </>
+
+        {/* ACTIONS */}
+        <div className="flex justify-end gap-2 mt-6">
+          <button
+            className="px-4 py-2 bg-gray-300 rounded"
+            onClick={() => {
+              clearForm();
+              setShowModal(false);
+            }}
+          >
+            Cancelar
+          </button>
+
+          <button
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-600 text-white rounded"
+            onClick={addAtleta}
+          >
+            {isLoading ? <ActivityIndicator /> : "Salvar"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

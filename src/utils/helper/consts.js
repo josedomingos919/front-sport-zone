@@ -115,3 +115,17 @@ export const EscalaoOptionsEnum = {
   SUB_19: "Sub-19",
   SENIOR: "Sénior",
 };
+
+export const PosicaoEnum = {
+  GOLEIRO: "Goleiro",
+  DEFESA: "Defesa",
+  MEDIO: "Médio",
+  AVANCADO: "Avançado",
+};
+
+export const PosicaoOptions = [
+  { value: "GOLEIRO", label: "Goleiro" },
+  { value: "DEFESA", label: "Defesa" },
+  { value: "MEDIO", label: "Médio" },
+  { value: "AVANCADO", label: "Avançado" },
+];

@@ -13,6 +13,7 @@ import {
   UserAccessType,
 } from "@/utils/helper/consts";
 import { HttpStatus } from "@/utils/helper";
+import AddAtletaModal from "../AddModal/AddModal";
 
 const ClubeTable = () => {
   const [movements, setMovements] = useState([]);
@@ -128,12 +129,7 @@ const ClubeTable = () => {
       </div>
 
       {/* Modal Add Moviment */}
-      <EditMovimentModalEditar
-        resetList={resetList}
-        showModal={showEditModal}
-        setShowModal={setShowEditModal}
-      />
-      <AddModal
+      <AddAtletaModal
         resetList={resetList}
         showModal={showModal}
         setShowModal={setShowModal}
