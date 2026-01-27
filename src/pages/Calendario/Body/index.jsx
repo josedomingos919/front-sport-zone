@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import TreinoTable from "./TreinoTab";
 
 const tabs = [
   { key: "treinos", label: "Treinos" },
@@ -30,8 +31,8 @@ export default function CalendarioBody() {
       </div>
 
       {/* Conteúdo */}
-      {/* {activeTab === "treinos" && <TreinosTab />}
-      {activeTab === "jogos" && <JogosTab />}
+      {activeTab === "treinos" && <TreinoTable />}
+      {/* {activeTab === "jogos" && <JogosTab />}
       {activeTab === "notificacoes" && <NotificacoesTab />}
       {activeTab === "historico" && <HistoricoAtletaTab />} */}
     </div>

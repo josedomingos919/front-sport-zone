@@ -7,10 +7,12 @@ import { atleta } from "./atleta";
 import { teacher } from "./teacher";
 import { province } from "./province";
 import { financeiro } from "./financeiro";
+import { treino } from "./treino";
 
 export const service = {
   auth,
   user,
+  treino,
   clube,
   cache,
   atleta,
