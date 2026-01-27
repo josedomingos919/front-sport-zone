@@ -1,4 +1,6 @@
 import { service } from "@/services";
+import { useAppState } from "@/store/appState";
+import { HttpStatus } from "@/utils/helper";
 import axios from "axios";
 
 export const axiosInstance = axios.create({
