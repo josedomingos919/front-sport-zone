@@ -58,10 +58,28 @@ async function remove(id = "") {
   }
 }
 
+async function exportData(filter = {}) {
+  const queryParams = new URLSearchParams(filter);
+
+  try {
+    const response = await axiosInstance.get(
+      `financeiro/export/excel?${queryParams}`,
+      {
+        responseType: "blob",
+      }
+    );
+
+    return response;
+  } catch (error) {
+    return error?.response;
+  }
+}
+
 export const financeiro = {
+  add,
   update,
   remove,
-  add,
   search,
   getAll,
+  exportData,
 };

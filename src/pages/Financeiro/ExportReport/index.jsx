@@ -1,3 +1,4 @@
+import { axiosInstance } from "@/api/axios";
 import React, { useState } from "react";
 import { FaFileExport } from "react-icons/fa";
 
@@ -7,6 +8,11 @@ const ExportReportModal = ({ show, onClose, onExport, resetList }) => {
 
   const handleExport = () => {
     if (!startDate || !endDate) return alert("Preencha as duas datas");
+
+    const url = `${axiosInstance.getUri()}financeiro/export/excel?dataInicio=${startDate}&dataFim=${endDate}`;
+
+    window.open(url, "_blank");
+
     onExport(startDate, endDate);
     setStartDate("");
     setEndDate("");
