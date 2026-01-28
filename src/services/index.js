@@ -9,10 +9,12 @@ import { province } from "./province";
 import { financeiro } from "./financeiro";
 import { treino } from "./treino";
 import { jogo } from "./jogo";
+import { historico } from "./historico";
 
 export const service = {
   jogo,
   auth,
+  historico,
   user,
   treino,
   clube,
