@@ -5,8 +5,8 @@ import JogoTab from "./JogoTab";
 const tabs = [
   { key: "treinos", label: "Treinos" },
   { key: "jogos", label: "Jogos" },
+  { key: "historico", label: "Histórico" },
   { key: "notificacoes", label: "Notificações" },
-  { key: "historico", label: "Histórico por Atleta" },
 ];
 
 export default function CalendarioBody() {

@@ -129,3 +129,9 @@ export const PosicaoOptions = [
   { value: "MEDIO", label: "Médio" },
   { value: "AVANCADO", label: "Avançado" },
 ];
+
+export const TipoJogoOptions = [
+  { value: "Amigável", label: "Amigável" },
+  { value: "Campeonato", label: "Campeonato" },
+  { value: "Torneio", label: "Torneio" },
+];

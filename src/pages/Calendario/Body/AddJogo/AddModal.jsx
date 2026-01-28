@@ -3,6 +3,8 @@ import { service } from "@/services";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
 import { HttpStatus } from "@/utils/helper";
+import { TipoJogoOptions } from "@/utils/helper/consts";
+
 import Select from "react-select";
 import ActivityIndicator from "@/components/activityIndicator";
 
@@ -11,9 +13,10 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
     descricao: "",
     data: "",
     hora: "",
-    duracaoMin: "",
     local: "",
+    tipo: null,
     equipa: null,
+    adversario: null,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +30,7 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
     }
 
     if (!form.data) {
-      toast.error("Data do treino é obrigatória.");
-      return false;
-    }
-
-    if (!form.duracaoMin || Number(form.duracaoMin) <= 0) {
-      toast.error("Duração inválida.");
+      toast.error("Data do jogo é obrigatória.");
       return false;
     }
 
@@ -41,8 +39,18 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
       return false;
     }
 
+    if (!form.tipo?.value) {
+      toast.error("Selecione o tipo de jogo.");
+      return false;
+    }
+
     if (!form.equipa?.value) {
-      toast.error("Selecione uma equipa.");
+      toast.error("Selecione a equipa própria.");
+      return false;
+    }
+
+    if (!form.adversario?.value) {
+      toast.error("Selecione a equipa adversária.");
       return false;
     }
 
@@ -55,38 +63,39 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
       descricao: "",
       data: "",
       hora: "",
-      duracaoMin: "",
       local: "",
+      tipo: null,
       equipa: null,
+      adversario: null,
     });
   };
 
   /* ---------------- SUBMIT ---------------- */
-  const addTreino = async () => {
+  const addJogo = async () => {
     if (!isValidData()) return;
 
     setIsLoading(true);
 
-    // Junta data + hora (se existir)
     const dataFinal = form.hora
       ? new Date(`${form.data}T${form.hora}`)
       : new Date(form.data);
 
-    const response = await service.treino.add({
+    const response = await service.jogo.add({
       descricao: form.descricao,
       data: dataFinal,
-      duracaoMin: Number(form.duracaoMin),
       local: form.local,
+      tipo: form.tipo.value,
       equipaId: form.equipa.value,
+      adversarioId: form.adversario.value,
     });
 
     if (response?.status === HttpStatus.CREATED) {
-      toast.success("Treino criado com sucesso!");
+      toast.success("Jogo criado com sucesso!");
       clearForm();
       setShowModal(false);
       resetList();
     } else {
-      toast.error("Erro ao criar treino.");
+      toast.error("Erro ao criar jogo.");
     }
 
     setIsLoading(false);
@@ -94,7 +103,8 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
 
   /* ---------------- LOAD EQUIPAS ---------------- */
   const getAllEquipas = async () => {
-    const response = await service.equipa.getAll({ page: 1, size: 100 });
+    const response = await service.equipa.getAll({ page: 1, size: 1000 });
+    console.log("Equipas response:", response);
     if (response?.status === HttpStatus.OK) {
       setEquipas(
         response.data.equipas.map((e) => ({
@@ -117,7 +127,7 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <FaPlus className="mr-2" /> Novo Treino
+              <FaPlus className="mr-2" /> Novo Jogo
             </h2>
 
             {/* FORM */}
@@ -128,7 +138,7 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
                 <input
                   type="text"
                   className="border p-2 rounded w-full"
-                  placeholder="ex.: Treino físico"
+                  placeholder="ex.: Jogo treino"
                   value={form.descricao}
                   onChange={(e) =>
                     setForm({ ...form, descricao: e.target.value })
@@ -158,38 +168,46 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
                 />
               </div>
 
-              {/* Duração */}
-              <div>
-                <label className="text-sm">Duração (min)</label>
-                <input
-                  type="number"
-                  className="border p-2 rounded w-full"
-                  placeholder="ex.: 90"
-                  value={form.duracaoMin}
-                  onChange={(e) =>
-                    setForm({ ...form, duracaoMin: e.target.value })
-                  }
-                />
-              </div>
-
               {/* Local */}
-              <div>
+              <div className="col-span-2">
                 <label className="text-sm">Local</label>
                 <input
                   type="text"
                   className="border p-2 rounded w-full"
-                  placeholder="Campo principal"
+                  placeholder="ex.: Campo principal"
                   value={form.local}
                   onChange={(e) => setForm({ ...form, local: e.target.value })}
                 />
               </div>
 
-              {/* Equipa */}
-              <div className="col-span-2">
+              {/* Tipo */}
+              <div>
+                <label className="text-sm">Tipo</label>
+                <Select
+                  value={form.tipo}
+                  onChange={(tipo) => setForm({ ...form, tipo })}
+                  options={TipoJogoOptions}
+                  isClearable
+                />
+              </div>
+
+              {/* Equipa própria */}
+              <div>
                 <label className="text-sm">Equipa</label>
                 <Select
                   value={form.equipa}
                   onChange={(equipa) => setForm({ ...form, equipa })}
+                  options={equipas}
+                  isClearable
+                />
+              </div>
+
+              {/* Adversário */}
+              <div className="col-span-2">
+                <label className="text-sm">Adversário</label>
+                <Select
+                  value={form.adversario}
+                  onChange={(adversario) => setForm({ ...form, adversario })}
                   options={equipas}
                   isClearable
                 />
@@ -212,7 +230,7 @@ export default function AddJogoModal({ showModal, setShowModal, resetList }) {
               <button
                 disabled={isLoading}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={addTreino}
+                onClick={addJogo}
               >
                 {isLoading ? <ActivityIndicator /> : "Adicionar"}
               </button>

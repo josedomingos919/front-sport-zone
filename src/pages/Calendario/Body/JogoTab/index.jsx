@@ -97,7 +97,7 @@ const JogoTable = () => {
 
             {jogos?.map((jogo) => {
               const status = getTreinoStatus(jogo.data);
-
+              console.log("jogo", jogo);
               return (
                 <tr key={jogo.id} className="border-b hover:bg-gray-50">
                   <td className="py-2 px-4">{jogo.id}</td>

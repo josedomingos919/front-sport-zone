@@ -8,8 +8,10 @@ import { teacher } from "./teacher";
 import { province } from "./province";
 import { financeiro } from "./financeiro";
 import { treino } from "./treino";
+import { jogo } from "./jogo";
 
 export const service = {
+  jogo,
   auth,
   user,
   treino,
