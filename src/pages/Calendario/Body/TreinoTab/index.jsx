@@ -70,7 +70,7 @@ const TreinoTable = () => {
       <hr />
 
       {/* Tabela */}
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-100">
             <tr>
